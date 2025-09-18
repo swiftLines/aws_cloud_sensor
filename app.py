@@ -28,4 +28,7 @@ def readyz():
     return (jsonify(ready=ready), 200 if ready else 503)
 
 
-
+@app.route("/metrics")
+def metrics():
+    REQUESTS.labels("/metrics").inc()
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
