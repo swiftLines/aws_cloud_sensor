@@ -32,3 +32,8 @@ def readyz():
 def metrics():
     REQUESTS.labels("/metrics").inc()
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
+
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", "8080"))
+    app.run(host="0.0.0.0", port=port)
