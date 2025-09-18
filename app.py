@@ -18,3 +18,14 @@ def healthz():
     return jsonify(status="ok", uptime_sec=int(time.time() - start_time))
 
 
+@app.route("/readyz")
+def readyz():
+    REQUESTS.labels("/readyz").inc()
+    # Startup delay to simulate readiness gates
+    delay = int(os.getenv("READY_DELAY_SEC", "0"))
+    ready = (time.time() - start_time) >= delay
+    READY_OK.set(1 if ready else 0)
+    return (jsonify(ready=ready), 200 if ready else 503)
+
+
+
